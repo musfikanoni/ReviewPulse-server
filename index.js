@@ -30,7 +30,8 @@ async function run() {
     // console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
     const userCollection = client.db('ReviewPulseDB').collection('users');
-    const servicesCollection = client.db('ReviewPulseDB').collection('services')
+    const servicesCollection = client.db('ReviewPulseDB').collection('services');
+    const reviewsCollection = client.db('ReviewPulseDB').collection('reviews');
 
    //users related apis
    app.get('/users', async(req, res) => {
@@ -56,7 +57,13 @@ async function run() {
     })
 
     app.get('/services', async(req,res) => {
-      const cursor = servicesCollection.find();
+      const email = req.query.email;
+      let query = {};
+      if(email){
+        query = { email: email }
+      }
+
+      const cursor = servicesCollection.find(query);
       const result = await cursor.toArray();
       res.send(result);
     })
@@ -72,6 +79,20 @@ async function run() {
       const id = req.params.id;
       const query = {_id: new ObjectId(id)}
       const result = await servicesCollection.findOne(query);
+      res.send(result);
+    })
+
+    //review
+    app.post('/reviews', async(req, res) => {
+      const newReview = req.body;
+      const result = await reviewsCollection.insertOne(newReview);
+      res.send(result);
+    })
+
+
+    app.get('/reviews', async(req,res) => {
+      const cursor = reviewsCollection.find();
+      const result = await cursor.toArray();
       res.send(result);
     })
 

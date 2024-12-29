@@ -96,6 +96,30 @@ async function run() {
       res.send(result);
     })
 
+    //update services
+    app.put('/services/:id', async(req, res) => {
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)};
+      const options = { upsert: true };
+      const service = req.body;
+
+      const updatedService = {
+        $set: {
+          photoUrl: service.photoUrl,
+          title: service.title,
+          companyName: service.companyName,
+          website: service.website,
+          description: service.description,
+          category: service.category,
+          price: service.price,
+          date: service.date,
+        }
+      }
+
+      const result = await servicesCollection.updateOne(filter, updatedService, options);
+      res.send(result)
+    })
+
     //Delete services
     app.delete('/services/:id', async(req, res) => {
       const id = req.params.id;

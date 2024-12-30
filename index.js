@@ -93,6 +93,14 @@ async function run() {
       const email = req.query.email;
       const query = { posted_email: email }
       const result = await reviewsCollection.find(query).toArray();
+      for(const postReview of result){
+        const query1 = { _id: new ObjectId(postReview.review_id) }
+        const review = await servicesCollection.findOne(query1);
+        if(review){
+          postReview.companyName = review.companyName;
+          postReview.category = review.category;
+        }   
+      }
       res.send(result);
     })
 
@@ -131,6 +139,14 @@ async function run() {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) }
       const result = await servicesCollection.deleteOne(query);
+      res.send(result);
+    })
+
+    //Delete reviews
+    app.delete('/reviews/:id', async(req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const result = await reviewsCollection.deleteOne(query);
       res.send(result);
     })
 

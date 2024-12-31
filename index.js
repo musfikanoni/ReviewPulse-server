@@ -104,14 +104,15 @@ async function run() {
       res.send(result);
     })
 
-    // app.get('/reviews', async(req,res) => {
-    //   const cursor = reviewsCollection.find();
-    //   const result = await cursor.toArray();
+    // app.get('/reviews/:id', async(req, res) => {
+    //   const id = req.params.id;
+    //   const query = {_id: new ObjectId(id)}
+    //   const result = await reviewsCollection.findOne(query);
     //   res.send(result);
     // })
 
     //update services
-    app.put('/services/:id', async(req, res) => {
+    app.put('/reviews/:id', async(req, res) => {
       const id = req.params.id;
       const filter = {_id: new ObjectId(id)};
       const options = { upsert: true };
@@ -133,6 +134,28 @@ async function run() {
       const result = await servicesCollection.updateOne(filter, updatedService, options);
       res.send(result)
     })
+
+
+    //Update reviews
+    app.put('/reviews/:id', async(req, res) => {
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)};
+      const options = { upsert: true };
+      const review = req.body;
+      
+      const updatedReview = {
+        $set: {
+          title: review.title,
+          review: review.review,
+          date: review.date,
+          rating: review.rating
+        }
+      }
+
+      const result = await reviewsCollection.updateOne(filter, updatedReview, options);
+      res.send(result)
+    })
+
 
     //Delete services
     app.delete('/services/:id', async(req, res) => {

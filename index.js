@@ -104,12 +104,7 @@ async function run() {
       res.send(result);
     })
 
-    // app.get('/reviews/:id', async(req, res) => {
-    //   const id = req.params.id;
-    //   const query = {_id: new ObjectId(id)}
-    //   const result = await reviewsCollection.findOne(query);
-    //   res.send(result);
-    // })
+
 
     //update services
     app.put('/reviews/:id', async(req, res) => {
@@ -135,6 +130,15 @@ async function run() {
       res.send(result)
     })
 
+
+
+
+    app.get('/reviews/:id', async(req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await reviewsCollection.findOne(query);
+      res.send(result);
+    })
 
     //Update reviews
     app.put('/reviews/:id', async(req, res) => {

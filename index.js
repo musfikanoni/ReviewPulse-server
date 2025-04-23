@@ -107,7 +107,7 @@ async function run() {
 
 
     //update services
-    app.put('/reviews/:id', async(req, res) => {
+    app.put('/services/:id', async(req, res) => {
       const id = req.params.id;
       const filter = {_id: new ObjectId(id)};
       const options = { upsert: true };

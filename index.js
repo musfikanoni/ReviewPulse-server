@@ -56,17 +56,36 @@ async function run() {
       res.send(result);
     })
 
-    app.get('/services', async(req,res) => {
-      const email = req.query.email;
-      let query = {};
-      if(email){
-        query = { email: email }
-      }
+    // app.get('/services', async(req,res) => {
+    //   const email = req.query.email;
+    //   let query = {};
+    //   if(email){
+    //     query = { email: email }
+    //   }
+      
+    //   const cursor = servicesCollection.find(query);
+    //   const result = await cursor.toArray();
+    //   res.send(result);
+    // })
 
+    app.get('/services', async (req, res) => {
+      const { email, searchParams } = req.query;
+    
+      let query = {};
+    
+      if (email) {
+        query.email = email;
+      }
+    
+      if (searchParams) {
+        query.title = { $regex: searchParams, $options: "i" };
+      }
+    
       const cursor = servicesCollection.find(query);
       const result = await cursor.toArray();
       res.send(result);
-    })
+    });
+    
 
     //
     app.get('/', async (req, res) => {
